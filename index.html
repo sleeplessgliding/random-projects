@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portland Burger Week Menu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --atomic-violet: #4004F6;
+      --purple-deep: #5E4C7D;
+      --purple-mid: #7B689A;
+      --purple-soft: #8E7BA9;
+      --purple-light: #A695B8;
+      --bg-color: #f4f1f8;
+      --bg-elevated: #ffffff;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --primary: var(--atomic-violet);
+      --primary-dark: var(--purple-deep);
+      --text: #3d3450;
+      --text-muted: var(--purple-mid);
+      --border: rgba(142, 123, 169, 0.35);
+      --badge-bg: rgba(166, 149, 184, 0.35);
+      --badge-text: var(--purple-deep);
+      --radius: 16px;
+      --radius-pill: 999px;
+      --shadow: 0 8px 32px rgba(64, 4, 246, 0.08);
+      --shadow-hover: 0 16px 40px rgba(64, 4, 246, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        sans-serif;
+      background: linear-gradient(165deg, #f8f6fc 0%, var(--bg-color) 45%, #ebe4f2 100%);
+      background-attachment: fixed;
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2.5rem 1.25rem 3rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1.75rem;
+      padding: 1.5rem 1rem 0;
+    }
+
+    header h1 {
+      font-size: clamp(1.85rem, 5vw, 2.75rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.65rem;
+      background: linear-gradient(
+        110deg,
+        var(--purple-deep) 0%,
+        var(--purple-mid) 20%,
+        var(--purple-soft) 38%,
+        var(--atomic-violet) 48%,
+        var(--purple-light) 52%,
+        var(--atomic-violet) 56%,
+        var(--purple-soft) 68%,
+        var(--purple-mid) 82%,
+        var(--purple-deep) 100%
+      );
+      background-size: 260% 100%;
+      background-position: 0% 50%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: title-shimmer 6s ease-in-out infinite;
+    }
+
+    @keyframes title-shimmer {
+      0%,
+      100% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      font-weight: 500;
+      max-width: 28rem;
+      margin: 0 auto;
+    }
+
+    /* Filter Controls */
+    .filter-section {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      width: 100%;
+      margin-bottom: 2.25rem;
+      margin-top: 0;
+      padding: 0.75rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 0.55rem 1.15rem;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.875rem;
+      font-family: inherit;
+      color: var(--purple-deep);
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .filter-btn:hover {
+      background: rgba(166, 149, 184, 0.25);
+      border-color: rgba(142, 123, 169, 0.4);
+    }
+
+    .filter-btn.active {
+      background: var(--atomic-violet);
+      color: #ffffff;
+      border-color: var(--atomic-violet);
+      box-shadow: 0 4px 14px rgba(64, 4, 246, 0.35);
+    }
+
+    /* Burger Grid */
+    .burger-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.75rem;
+      border-top: 1px solid var(--border);
+      margin-top: 0.25rem;
+      padding-top: 2rem;
+    }
+
+    .burger-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      backdrop-filter: blur(6px);
+    }
+
+    .burger-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(64, 4, 246, 0.25);
+    }
+
+    .burger-card.hidden {
+      display: none;
+    }
+
+    /* Thumbnail Link & Styling */
+    .thumb-link {
+      display: block;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--purple-light), var(--purple-soft));
+    }
+
+    .burger-thumb {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .thumb-link:hover .burger-thumb {
+      transform: scale(1.03);
+    }
+
+    .burger-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+    }
+
+    .burger-header {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.85rem;
+    }
+
+    .burger-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .burger-title-row .burger-name-link {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .favorite-btn {
+      flex-shrink: 0;
+      width: 2.5rem;
+      height: 2.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.85);
+      color: var(--purple-soft);
+      cursor: pointer;
+      font-size: 1.25rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+    }
+
+    .favorite-btn:hover {
+      border-color: var(--atomic-violet);
+      color: var(--atomic-violet);
+      transform: scale(1.05);
+    }
+
+    .favorite-btn.is-favorite {
+      background: var(--purple-deep);
+      border-color: var(--purple-deep);
+      color: #f5c842;
+      box-shadow: 0 2px 10px rgba(94, 76, 125, 0.35);
+    }
+
+    .favorite-btn.is-favorite:hover {
+      background: #4a3a66;
+      border-color: #4a3a66;
+      color: #ffd966;
+    }
+
+    .burger-name-link {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .burger-name-link:hover .burger-name {
+      color: var(--primary);
+    }
+
+    .burger-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--purple-deep);
+      line-height: 1.3;
+      margin-bottom: 0.35rem;
+      transition: color 0.2s ease;
+      letter-spacing: -0.01em;
+    }
+
+    .restaurant-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--purple-mid);
+    }
+
+    .neighborhood-tag {
+      display: inline-block;
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-pill);
+      margin-top: 0.5rem;
+    }
+
+    .burger-body {
+      flex-grow: 1;
+      margin-bottom: 1.25rem;
+    }
+
+    .ingredients-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: var(--purple-soft);
+      margin-bottom: 0.45rem;
+    }
+
+    .ingredients-list {
+      font-size: 0.95rem;
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    .burger-footer {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: rgba(166, 149, 184, 0.12);
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(142, 123, 169, 0.2);
+    }
+
+    .address {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.4rem;
+    }
+
+    .address-link {
+      color: var(--atomic-violet);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .address-link:hover {
+      text-decoration: underline;
+      color: var(--purple-deep);
+    }
+
+    .neighborhood-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.5rem;
+    }
+
+    .map-section {
+      margin-top: 0;
+      margin-bottom: 1.25rem;
+      padding-top: 0;
+      padding-bottom: 0;
+      border-top: none;
+    }
+
+    .map-section h2 {
+      text-align: center;
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--purple-deep);
+      margin-bottom: 0.4rem;
+    }
+
+    .map-section .map-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+    }
+
+    .map-api-hint {
+      max-width: 640px;
+      margin: 0 auto 1rem;
+      padding: 0.85rem 1rem;
+      background: rgba(166, 149, 184, 0.2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 0.9rem;
+      color: var(--purple-deep);
+      line-height: 1.45;
+    }
+
+    .map-api-hint code {
+      font-size: 0.85em;
+      background: rgba(255, 255, 255, 0.65);
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      color: var(--atomic-violet);
+    }
+
+    .burger-map {
+      width: 100%;
+      height: 480px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      background: rgba(166, 149, 184, 0.25);
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1.5rem 1rem 2rem;
+      }
+
+      .filter-section {
+        border-radius: var(--radius);
+      }
+
+      header h1 {
+        font-size: 1.75rem;
+      }
+
+      .burger-map {
+        height: 360px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      header h1 {
+        animation: none;
+        background-size: 100% 100%;
+        background: linear-gradient(
+          135deg,
+          var(--atomic-violet) 0%,
+          var(--purple-mid) 55%,
+          var(--purple-deep) 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Portland Burger Week</h1>
+    </header>
+
+    <section class="map-section" id="map-section" aria-label="Burger Week restaurant map">
+      <p class="map-api-hint" id="map-api-hint" hidden>
+        Add your Google Maps JavaScript API key in <code>GOOGLE_MAPS_API_KEY</code> at the bottom of this page to load the map.
+        Address links still open in Google Maps without a key.
+      </p>
+      <div id="burger-map" class="burger-map" role="application" aria-label="Google map of Burger Week restaurants"></div>
+    </section>
+
+    <div class="filter-section">
+      <button class="filter-btn active" data-filter="all" onclick="filterMenu('all', event)">All</button>
+      <button class="filter-btn" data-filter="star" onclick="filterMenu('star', event)">⭐</button>
+      <button class="filter-btn" data-filter="Milwaukie" onclick="filterMenu('Milwaukie', event)">Milwaukie</button>
+      <button class="filter-btn" data-filter="North" onclick="filterMenu('North', event)">North</button>
+      <button class="filter-btn" data-filter="Northeast" onclick="filterMenu('Northeast', event)">Northeast</button>
+      <button class="filter-btn" data-filter="Pearl" onclick="filterMenu('Pearl', event)">Pearl District</button>
+      <button class="filter-btn" data-filter="Southeast" onclick="filterMenu('Southeast', event)">Southeast</button>
+      <button class="filter-btn" data-filter="Southwest" onclick="filterMenu('Southwest', event)">Southwest</button>
+      <button class="filter-btn" data-filter="Vancouver" onclick="filterMenu('Vancouver', event)">Vancouver</button>
+    </div>
+
+    <!-- Burger Cards Grid -->
+    <div class="burger-grid">
+<!-- The AB-Brie Burger -->
+      <article class="burger-card" data-tags="Southwest" data-lat="45.520575" data-lng="-122.680496">
+        <a class="thumb-link" href="https://everout.com/portland/events/the-ab-brie-burger/e248981/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDMwOTYxODczMTc0OC1BYmlnYWlsLUhhbGwuanBnIiwgImVkaXRzIjogeyJyZXNpemUiOiB7ImZpdCI6ICJpbnNpZGUiLCAicG9zaXRpb24iOiAiY2VudHJlIiwgIndpZHRoIjogOTYwLCAiaGVpZ2h0IjogNjAwLCAid2l0aG91dEVubGFyZ2VtZW50IjogZmFsc2V9LCAicm90YXRlIjogbnVsbH19" alt="The AB-Brie Burger" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/the-ab-brie-burger/e248981/" target="_blank" rel="noopener">
+                <h2 class="burger-name">The AB-Brie Burger</h2>
+              </a>
+              <div class="restaurant-name">Abigail Hall</div>
+              <span class="neighborhood-tag">Southwest</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Ground beef patty, bacon chipotle onion jam, relish, Brie cheese, and arugula on a brioche bun.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=813%20SW%20Alder%20St.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">813 SW Alder St.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- Backyard BBQ Burger -->
+      <article class="burger-card" data-tags="North" data-lat="45.573191" data-lng="-122.557561">
+        <a class="thumb-link" href="https://everout.com/portland/events/backyard-bbq-burger/e248851/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDIyOTAxMTA4NTM3Mi1GdWxsZXJzLUJ1cmdlci1TaGFjay5qcGciLCAiZWRpdHMiOiB7InJlc2l6ZSI6IHsiZml0IjogImluc2lkZSIsICJwb3NpdGlvbiI6ICJjZW50cmUiLCAid2lkdGgiOiA5NjAsICJoZWlnaHQiOiA2MDAsICJ3aXRob3V0RW5sYXJnZW1lbnQiOiBmYWxzZX0sICJyb3RhdGUiOiBudWxsfX0=" alt="Backyard BBQ Burger" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/backyard-bbq-burger/e248851/" target="_blank" rel="noopener">
+                <h2 class="burger-name">Backyard BBQ Burger</h2>
+              </a>
+              <div class="restaurant-name">Fuller's Burger Shack</div>
+              <span class="neighborhood-tag">PDX</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Ground beef patty, lettuce, tomato, pickle, secret sauce, Swiss cheese, crisp bacon, and fried jumbo onion ring.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=10131%20NE%20Cascades%20Pkwy.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">10131 NE Cascades Pkwy.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- Black Angus Burger with Green Chili Pork Chorizo -->
+      <article class="burger-card" data-tags="Southwest" data-lat="45.518127" data-lng="-122.681719">
+        <a class="thumb-link" href="https://everout.com/portland/events/black-angus-burger-with-green-chili-pork-chorizo/e248627/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDE0NzAzOTQ0NzY5OC1UYXlsb3ItU3RyZWV0LVRhdmVybi5qcGciLCAiZWRpdHMiOiB7InJlc2l6ZSI6IHsiZml0IjogImluc2lkZSIsICJwb3NpdGlvbiI6ICJjZW50cmUiLCAid2lkdGgiOiA5NjAsICJoZWlnaHQiOiA2MDAsICJ3aXRob3V0RW5sYXJnZW1lbnQiOiBmYWxzZX0sICJyb3RhdGUiOiBudWxsfX0=" alt="Black Angus Burger with Green Chili Pork Chorizo" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/black-angus-burger-with-green-chili-pork-chorizo/e248627/" target="_blank" rel="noopener">
+                <h2 class="burger-name">Black Angus Burger with Green Chili Pork Chorizo</h2>
+              </a>
+              <div class="restaurant-name">Taylor Street Tavern</div>
+              <span class="neighborhood-tag">Downtown</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Chargrilled Black Angus burger with green chili pork chorizo, pepper jack cheese on a toasted pub bun with avocado mash and spicy aioli.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=808%20SW%20Taylor%20St.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">808 SW Taylor St.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- Black Pepper Burger -->
+      <article class="burger-card" data-tags="Southeast" data-lat="45.504962" data-lng="-122.623618">
+        <a class="thumb-link" href="https://everout.com/portland/events/black-pepper-burger/e249313/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDYwMDY2ODg0MjAxOC1IYXdrZXItU3RhdGlvbi5qcGciLCAiZWRpdHMiOiB7InJlc2l6ZSI6IHsiZml0IjogImluc2lkZSIsICJwb3NpdGlvbiI6ICJjZW50cmUiLCAid2lkdGgiOiA5NjAsICJoZWlnaHQiOiA2MDAsICJ3aXRob3V0RW5sYXJnZW1lbnQiOiBmYWxzZX0sICJyb3RhdGUiOiBudWxsfX0=" alt="Black Pepper Burger" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/black-pepper-burger/e249313/" target="_blank" rel="noopener">
+                <h2 class="burger-name">Black Pepper Burger</h2>
+              </a>
+              <div class="restaurant-name">Hawker Station PDX</div>
+              <span class="neighborhood-tag">Buckman</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Toasted sesame seeds bun, fresh lettuce, garlic mayo, 1/4-lb Angus beef patty, famous Hong Kong-style black pepper sauce, and onion rings.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=3829%20SE%20Division%20St.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">3829 SE Division St.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- But What About Second Breakfast? -->
+      <article class="burger-card" data-tags="Northeast" data-lat="45.540021" data-lng="-122.668415">
+        <a class="thumb-link" href="https://everout.com/portland/events/but-what-about-second-breakfast/e249300/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDU5MTQyMDI3MDMwNi1MYXp5LURheXNfTkZsaW50LmpwZyIsICJlZGl0cyI6IHsicmVzaXplIjogeyJmaXQiOiAiaW5zaWRlIiwgInBvc2l0aW9uIjogImNlbnRyZSIsICJ3aWR0aCI6IDk2MCwgImhlaWdodCI6IDYwMCwgIndpdGhvdXRFbmxhcmdlbWVudCI6IGZhbHNlfSwgInJvdGF0ZSI6IG51bGx9fQ==" alt="But What About Second Breakfast?" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/but-what-about-second-breakfast/e249300/" target="_blank" rel="noopener">
+                <h2 class="burger-name">But What About Second Breakfast?</h2>
+              </a>
+              <div class="restaurant-name">Lazy Days Brewing</div>
+              <span class="neighborhood-tag">Northeast</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Bacon, double sausage smash patties with cheese, hashbrown PO-TA-TOES, and a maple gochujang burger sauce between two 4 inch pancakes.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=2326%20N.%20Flint%20Ave%2C%20Portland%2C%20OR" target="_blank" rel="noopener">2326 N. Flint Ave</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- The Cascadian -->
+      <article class="burger-card" data-tags="Southeast" data-lat="45.515466" data-lng="-122.666160">
+        <a class="thumb-link" href="https://everout.com/portland/events/the-cascadian/e248860/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDIzMTQwMTIyMjQ2LUNsYXJrbGV3aXMuanBnIiwgImVkaXRzIjogeyJyZXNpemUiOiB7ImZpdCI6ICJpbnNpZGUiLCAicG9zaXRpb24iOiAiY2VudHJlIiwgIndpZHRoIjogOTYwLCAiaGVpZ2h0IjogNjAwLCAid2l0aG91dEVubGFyZ2VtZW50IjogZmFsc2V9LCAicm90YXRlIjogbnVsbH19" alt="The Cascadian" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/the-cascadian/e248860/" target="_blank" rel="noopener">
+                <h2 class="burger-name">The Cascadian</h2>
+              </a>
+              <div class="restaurant-name">Clarklewis</div>
+              <div class="neighborhood-tags">
+                <span class="neighborhood-tag">Buckman</span>
+              </div>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                American wagyu patty, Jim Beam & Oregon marionberry barbecue sauce, Face Rock Creamery “In Your Face” pepper cheddar, pickled onions, arugula, pretzel bun.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=1001%20SE%20Water%20Ave.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">1001 SE Water Ave.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- Club 21 Juicy Lucy -->
+      <article class="burger-card" data-tags="Southeast" data-lat="45.497627" data-lng="-122.600898">
+        <a class="thumb-link" href="https://everout.com/portland/events/club-21-juicy-lucy/e249301/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDU5MTUwNzA1NDAwNC1MYXktTG93XzEuanBnIiwgImVkaXRzIjogeyJyZXNpemUiOiB7ImZpdCI6ICJpbnNpZGUiLCAicG9zaXRpb24iOiAiY2VudHJlIiwgIndpZHRoIjogOTYwLCAiaGVpZ2h0IjogNjAwLCAid2l0aG91dEVubGFyZ2VtZW50IjogZmFsc2V9LCAicm90YXRlIjogbnVsbH19" alt="Club 21 Juicy Lucy" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/club-21-juicy-lucy/e249301/" target="_blank" rel="noopener">
+                <h2 class="burger-name">Club 21 Juicy Lucy</h2>
+              </a>
+              <div class="restaurant-name">Lay Low Tavern</div>
+              <span class="neighborhood-tag">South Tabor</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Bacon and cheddar stuffed patty, lettuce, tomato, pickle, onion, mustard and ketchup.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=6015%20SE%20Powell%20St.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">6015 SE Powell St.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- The Forbidden Snack -->
+      <article class="burger-card" data-tags="Southeast" data-lat="45.520891" data-lng="-122.663488">
+        <a class="thumb-link" href="https://everout.com/portland/events/the-forbidden-snack/e249294/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDU5MDU5NTQ2MzI2Mi1XYXlmaW5kZXIuanBnIiwgImVkaXRzIjogeyJyZXNpemUiOiB7ImZpdCI6ICJpbnNpZGUiLCAicG9zaXRpb24iOiAiY2VudHJlIiwgIndpZHRoIjogOTYwLCAiaGVpZ2h0IjogNjAwLCAid2l0aG91dEVubGFyZ2VtZW50IjogZmFsc2V9LCAicm90YXRlIjogbnVsbH19" alt="The Forbidden Snack" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/the-forbidden-snack/e249294/" target="_blank" rel="noopener">
+                <h2 class="burger-name">The Forbidden Snack</h2>
+              </a>
+              <div class="restaurant-name">Wayfinder</div>
+              <span class="neighborhood-tag">Buckman </span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Caramelized onions, bacon, whipped feta, guava jam, and arugula on a house pub bun.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=304%20SE%202nd%20Ave.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">304 SE 2nd Ave.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- French Onion Juicy Lucy -->
+      <article class="burger-card" data-tags="Southeast" data-lat="45.515329" data-lng="-122.665530">
+        <a class="thumb-link" href="https://everout.com/portland/events/french-onion-juicy-lucy/e249321/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDYwMjQ5NzgwMjIxNy1CdW5rLVNhbmR3aWNoZXMuanBnIiwgImVkaXRzIjogeyJyZXNpemUiOiB7ImZpdCI6ICJpbnNpZGUiLCAicG9zaXRpb24iOiAiY2VudHJlIiwgIndpZHRoIjogOTYwLCAiaGVpZ2h0IjogNjAwLCAid2l0aG91dEVubGFyZ2VtZW50IjogZmFsc2V9LCAicm90YXRlIjogbnVsbH19" alt="French Onion Juicy Lucy" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/french-onion-juicy-lucy/e249321/" target="_blank" rel="noopener">
+                <h2 class="burger-name">French Onion Juicy Lucy</h2>
+              </a>
+              <div class="restaurant-name">Bunk Bar</div>
+              <span class="neighborhood-tag">Buckman</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Beef and pork burger stuffed with Swiss and Gruyere cheeses and topped with more Gruyere, caramelized onion jam, and herb mayo on a squishy bun.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=1028%20SE%20Water%20Ave.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">1028 SE Water Ave.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- French Onion Smash Burger -->
+      <article class="burger-card" data-tags="Southwest" data-lat="45.519028" data-lng="-122.677912">
+        <a class="thumb-link" href="https://everout.com/portland/events/french-onion-smash-burger/e249007/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDMxMzIzMjEwODYzMS1VcmJhbi1GYXJtZXIuanBnIiwgImVkaXRzIjogeyJyZXNpemUiOiB7ImZpdCI6ICJpbnNpZGUiLCAicG9zaXRpb24iOiAiY2VudHJlIiwgIndpZHRoIjogOTYwLCAiaGVpZ2h0IjogNjAwLCAid2l0aG91dEVubGFyZ2VtZW50IjogZmFsc2V9LCAicm90YXRlIjogbnVsbH19" alt="French Onion Smash Burger" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/french-onion-smash-burger/e249007/" target="_blank" rel="noopener">
+                <h2 class="burger-name">French Onion Smash Burger</h2>
+              </a>
+              <div class="restaurant-name">Urban Farmer</div>
+              <div class="neighborhood-tags">
+                <span class="neighborhood-tag">Southwest</span>
+              </div>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Smash burger, French onions, Swiss cheese, house mustard, roasted garlic aioli.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=525%20SW%20Morrison%20St.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">525 SW Morrison St.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- Garlic Knot Alla Gricia Burger -->
+      <article class="burger-card" data-tags="Southeast" data-lat="45.504962" data-lng="-122.623618">
+        <a class="thumb-link" href="https://everout.com/portland/events/garlic-knot-alla-gricia-burger/e249309/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDU5OTYzMzgzNDI3My1JdGFsaWFuLUpvYi5qcGciLCAiZWRpdHMiOiB7InJlc2l6ZSI6IHsiZml0IjogImluc2lkZSIsICJwb3NpdGlvbiI6ICJjZW50cmUiLCAid2lkdGgiOiA5NjAsICJoZWlnaHQiOiA2MDAsICJ3aXRob3V0RW5sYXJnZW1lbnQiOiBmYWxzZX0sICJyb3RhdGUiOiBudWxsfX0=" alt="Garlic Knot Alla Gricia Burger" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/garlic-knot-alla-gricia-burger/e249309/" target="_blank" rel="noopener">
+                <h2 class="burger-name">Garlic Knot Alla Gricia Burger</h2>
+              </a>
+              <div class="restaurant-name">The Italian Job</div>
+              <span class="neighborhood-tag">Southeast</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Grilled beef patty (seasoned like a classic meatball), Gricia sauce made with cream, rendered bacon fat, pecorino romano, cracked and toasted black pepper, topped with crispy bacon, sundried tomato and hot honey pesto, soft and toasted pub bun finished like a garlic knot with garlic butter, parmiggiano, and parsley flakes!
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=3829%20SE%20Division%20St.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">3829 SE Division St.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- The Hatch Green Chile Bacon Burger -->
+      <article class="burger-card" data-tags="Northeast" data-lat="45.524177" data-lng="-122.650787">
+        <a class="thumb-link" href="https://everout.com/portland/events/the-hatch-green-chile-bacon-burger/e249651/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDgzMjQwNTYyOTQ0NS1NaWRDaXR5LVNtYXNoQnVyZ2VyX0xldmVsMS5qcGciLCAiZWRpdHMiOiB7InJlc2l6ZSI6IHsiZml0IjogImluc2lkZSIsICJwb3NpdGlvbiI6ICJjZW50cmUiLCAid2lkdGgiOiA5NjAsICJoZWlnaHQiOiA2MDAsICJ3aXRob3V0RW5sYXJnZW1lbnQiOiBmYWxzZX0sICJyb3RhdGUiOiBudWxsfX0=" alt="The Hatch Green Chile Bacon Burger" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/the-hatch-green-chile-bacon-burger/e249651/" target="_blank" rel="noopener">
+                <h2 class="burger-name">The Hatch Green Chile Bacon Burger</h2>
+              </a>
+              <div class="restaurant-name">MidCity SmashedBurger @ Level Beer 3</div>
+              <span class="neighborhood-tag">Northeast</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                The Hatch Green Chile Bacon Burger features an all beef patty topped with Hatch green chiles, crispy bacon, American cheese, pepper jack cheese, and SmashSauce, all atop a Martin’s Potato Bun.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=1447%20NE%20Sandy%20Blvd.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">1447 NE Sandy Blvd.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- The Loyal Stinger -->
+      <article class="burger-card" data-tags="Southeast" data-lat="45.517792" data-lng="-122.659494">
+        <a class="thumb-link" href="https://everout.com/portland/events/the-loyal-stinger/e249401/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDY2OTAzMzM5NTM0OS1Mb3lhbC1MZWdpb24uanBnIiwgImVkaXRzIjogeyJyZXNpemUiOiB7ImZpdCI6ICJpbnNpZGUiLCAicG9zaXRpb24iOiAiY2VudHJlIiwgIndpZHRoIjogOTYwLCAiaGVpZ2h0IjogNjAwLCAid2l0aG91dEVubGFyZ2VtZW50IjogZmFsc2V9LCAicm90YXRlIjogbnVsbH19" alt="The Loyal Stinger" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/the-loyal-stinger/e249401/" target="_blank" rel="noopener">
+                <h2 class="burger-name">The Loyal Stinger</h2>
+              </a>
+              <div class="restaurant-name">Loyal Legion</div>
+              <span class="neighborhood-tag">Buckman</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Classic smash patty, American cheese, buffalo chicken cutlet, lettuce, garlic-bleu cheese dressing.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=710%20SE%206th.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">710 SE 6th.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- Meatball Burger -->
+      <article class="burger-card" data-tags="Southeast" data-lat="45.512354" data-lng="-122.651846">
+        <a class="thumb-link" href="https://everout.com/portland/events/meatball-burger/e249316/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDYwMDk2NjY3OTgzOC1HcmFzc2EuanBnIiwgImVkaXRzIjogeyJyZXNpemUiOiB7ImZpdCI6ICJpbnNpZGUiLCAicG9zaXRpb24iOiAiY2VudHJlIiwgIndpZHRoIjogOTYwLCAiaGVpZ2h0IjogNjAwLCAid2l0aG91dEVubGFyZ2VtZW50IjogZmFsc2V9LCAicm90YXRlIjogbnVsbH19" alt="Meatball Burger" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/meatball-burger/e249316/" target="_blank" rel="noopener">
+                <h2 class="burger-name">Meatball Burger</h2>
+              </a>
+              <div class="restaurant-name">Grassa</div>
+              <span class="neighborhood-tag">Hawthorne</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+               Provolone cheese, Calabrian mayo, oven-dried tomatoes, arugula.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=1375%20SE%20Hawthorne%20Blvd.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">1375 SE Hawthorne Blvd.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- Mont Dew Burger -->
+      <article class="burger-card" data-tags="Southeast" data-lat="45.500414" data-lng="-122.653971">
+        <a class="thumb-link" href="https://everout.com/portland/events/mont-dew-burger/e249325/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDYwMzgwNDU5NDkzLUJvdHRvcy1CQlEuanBnIiwgImVkaXRzIjogeyJyZXNpemUiOiB7ImZpdCI6ICJpbnNpZGUiLCAicG9zaXRpb24iOiAiY2VudHJlIiwgIndpZHRoIjogOTYwLCAiaGVpZ2h0IjogNjAwLCAid2l0aG91dEVubGFyZ2VtZW50IjogZmFsc2V9LCAicm90YXRlIjogbnVsbH19" alt="Mont Dew Burger" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/mont-dew-burger/e249325/" target="_blank" rel="noopener">
+                <h2 class="burger-name">Mont Dew Burger</h2>
+              </a>
+              <div class="restaurant-name">Botto’s BBQ</div>
+              <span class="neighborhood-tag">Southeast</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Half-pound ground prime brisket patty, caramelized onion, melty Gruyère cheese, French onion aioli, pickles, potato chips.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=3120%20SE%20Milwaukie%20Ave.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">3120 SE Milwaukie Ave.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- Out and In Burger -->
+      <article class="burger-card" data-tags="Southeast" data-lat="45.519441" data-lng="-122.651424">
+        <a class="thumb-link" href="https://everout.com/portland/events/out-and-in-burger/e249408/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDY3MDcyODAxOTkzOC1HcmFuZC1GaXIuanBnIiwgImVkaXRzIjogeyJyZXNpemUiOiB7ImZpdCI6ICJpbnNpZGUiLCAicG9zaXRpb24iOiAiY2VudHJlIiwgIndpZHRoIjogOTYwLCAiaGVpZ2h0IjogNjAwLCAid2l0aG91dEVubGFyZ2VtZW50IjogZmFsc2V9LCAicm90YXRlIjogbnVsbH19" alt="Out and In Burger" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/out-and-in-burger/e249408/" target="_blank" rel="noopener">
+                <h2 class="burger-name">Out and In Burger</h2>
+              </a>
+              <div class="restaurant-name">Grand Fir Brewing</div>
+              <span class="neighborhood-tag">Buckman</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Crunchy iceberg lettuce, gooey American cheese, local hot house tomatoes, griddled onions, Nick Grub's secret California sauce, and lots of love.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=1403%20SE%20Stark%20St.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">1403 SE Stark St.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- Paris, Texas -->
+      <article class="burger-card" data-tags="North" data-lat="45.562856" data-lng="-122.648301">
+        <a class="thumb-link" href="https://everout.com/portland/events/paris-texas/e249092/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDMyNjYyOTEzMTYzOS1Qb2RuYWhzLVBpdC5qcGciLCAiZWRpdHMiOiB7InJlc2l6ZSI6IHsiZml0IjogImluc2lkZSIsICJwb3NpdGlvbiI6ICJjZW50cmUiLCAid2lkdGgiOiA5NjAsICJoZWlnaHQiOiA2MDAsICJ3aXRob3V0RW5sYXJnZW1lbnQiOiBmYWxzZX0sICJyb3RhdGUiOiBudWxsfX0=" alt="Paris, Texas Burger" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/paris-texas/e249092/" target="_blank" rel="noopener">
+                <h2 class="burger-name">Paris, Texas</h2>
+              </a>
+              <div class="restaurant-name">Podnah's Pit Barbecue</div>
+              <div class="neighborhood-tags">
+                <span class="neighborhood-tag">North</span>
+              </div>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Smoked brisket and sirloin burger patty, shaved white onions, white American cheese, au poivre steak sauce, Dos Hermanos brioche bun.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=1625%20NE%20Killingsworth%20St.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">1625 NE Killingsworth St.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- Pastrami Thor Smash Burger -->
+      <article class="burger-card" data-tags="Southwest" data-lat="45.521246" data-lng="-122.676039">
+        <a class="thumb-link" href="https://everout.com/portland/events/pastrami-thor-smash-burger/e248845/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDIyODAyMzIzOTk3Ny1Jcm9uLVN0cmlrZS5qcGciLCAiZWRpdHMiOiB7InJlc2l6ZSI6IHsiZml0IjogImluc2lkZSIsICJwb3NpdGlvbiI6ICJjZW50cmUiLCAid2lkdGgiOiA5NjAsICJoZWlnaHQiOiA2MDAsICJ3aXRob3V0RW5sYXJnZW1lbnQiOiBmYWxzZX0sICJyb3RhdGUiOiBudWxsfX0=" alt="Pastrami Thor Smash Burger" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/pastrami-thor-smash-burger/e248845/" target="_blank" rel="noopener">
+                <h2 class="burger-name">Pastrami Thor Smash Burger</h2>
+              </a>
+              <div class="restaurant-name">Iron Strike Smash Burgers</div>
+              <span class="neighborhood-tag">Downtown</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Natural Pacific Northwest Country Beef smashed to perfection, topped with seared pastrami, melted American cheese, crisp shredded lettuce, fresh onions, crunchy pickles and signature Strike House Sauce on a buttery toasted brioche bun.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=431%20SW%20Harvey%20Milk%20St.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">431 SW Harvey Milk St.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- The Patty Meltdella Effect -->
+      <article class="burger-card" data-tags="Pearl" data-lat="45.525900" data-lng="-122.685495">
+        <a class="thumb-link" href="https://everout.com/portland/events/the-patty-meltdella-effect/e248983/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDMwOTk5NzE5OTE5NC0xMC1CYXJyZWwuanBnIiwgImVkaXRzIjogeyJyZXNpemUiOiB7ImZpdCI6ICJpbnNpZGUiLCAicG9zaXRpb24iOiAiY2VudHJlIiwgIndpZHRoIjogOTYwLCAiaGVpZ2h0IjogNjAwLCAid2l0aG91dEVubGFyZ2VtZW50IjogZmFsc2V9LCAicm90YXRlIjogbnVsbH19" alt="The Patty Meltdella Effect" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/the-patty-meltdella-effect/e248983/" target="_blank" rel="noopener">
+                <h2 class="burger-name">The Patty Meltdella Effect</h2>
+              </a>
+              <div class="restaurant-name">10 Barrel Brewing</div>
+              <span class="neighborhood-tag">Pearl District</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Gochujang burger sauce, 7 oz chuck, brisket, short rib burger patty, American & Swiss cheese, onion jam on Texas Toast!
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=1411%20NW%20Flanders%20St.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">1411 NW Flanders St.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- Piggy Smalls -->
+      <article class="burger-card" data-tags="Milwaukie" data-lat="45.446081" data-lng="-122.641839">
+        <a class="thumb-link" href="https://everout.com/portland/events/piggy-smalls/e249310/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDU5OTg2NzI3MTE0Ni1MYXJkby5qcGciLCAiZWRpdHMiOiB7InJlc2l6ZSI6IHsiZml0IjogImluc2lkZSIsICJwb3NpdGlvbiI6ICJjZW50cmUiLCAid2lkdGgiOiA5NjAsICJoZWlnaHQiOiA2MDAsICJ3aXRob3V0RW5sYXJnZW1lbnQiOiBmYWxzZX0sICJyb3RhdGUiOiBudWxsfX0=" alt="Piggy Smalls" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/piggy-smalls/e249310/" target="_blank" rel="noopener">
+                <h2 class="burger-name">Piggy Smalls</h2>
+              </a>
+              <div class="restaurant-name">Lardo</div>
+              <span class="neighborhood-tag">Hawthorne</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Pork burger, bacon, grilled peaches, dirty mustard, American cheese.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=10603%20SE%20Main%20St%2C%20Milwaukie%2C%20OR%2097222" target="_blank" rel="noopener">10603 SE Main St, Milwaukie, OR 97222</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- Service Mushroom Swiss Burger -->
+      <article class="burger-card" data-tags="Pearl" data-lat="45.527078" data-lng="-122.684883">
+        <a class="thumb-link" href="https://everout.com/portland/events/service-mushroom-swiss-burger/e249324/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDYwMzY3MDY5Njc2NC1Ccml4LmpwZyIsICJlZGl0cyI6IHsicmVzaXplIjogeyJmaXQiOiAiaW5zaWRlIiwgInBvc2l0aW9uIjogImNlbnRyZSIsICJ3aWR0aCI6IDk2MCwgImhlaWdodCI6IDYwMCwgIndpdGhvdXRFbmxhcmdlbWVudCI6IGZhbHNlfSwgInJvdGF0ZSI6IG51bGx9fQ==" alt="Service Mushroom Swiss Burger" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/service-mushroom-swiss-burger/e249324/" target="_blank" rel="noopener">
+                <h2 class="burger-name">Service Mushroom Swiss Burger</h2>
+              </a>
+              <div class="restaurant-name">Brix Tavern</div>
+              <span class="neighborhood-tag">Pearl District</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Ground beef patty, Swiss cheese, and mushroom.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=1338%20NW%20Hoyt%20St.%2C%20Portland%2C%20OR" target="_blank" rel="noopener">1338 NW Hoyt St.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- The Sleepover Burger -->
+      <article class="burger-card" data-tags="Southeast" data-lat="45.512883" data-lng="-122.665774">
+        <a class="thumb-link" href="https://everout.com/portland/events/the-sleepover-burger/e249006/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDMxMzEzNzU4MjEzNS1Xb2xmcy1IZWFkLmpwZyIsICJlZGl0cyI6IHsicmVzaXplIjogeyJmaXQiOiAiaW5zaWRlIiwgInBvc2l0aW9uIjogImNlbnRyZSIsICJ3aWR0aCI6IDk2MCwgImhlaWdodCI6IDYwMCwgIndpdGhvdXRFbmxhcmdlbWVudCI6IGZhbHNlfSwgInJvdGF0ZSI6IG51bGx9fQ==" alt="The Sleepover Burger" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/the-sleepover-burger/e249006/" target="_blank" rel="noopener">
+                <h2 class="burger-name">The Sleepover Burger</h2>
+              </a>
+              <div class="restaurant-name">Wolf's Head</div>
+              <span class="neighborhood-tag">Buckman</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Sleepovers, upgraded. A crispy deep fried pizza pocket, creamy garlic parmesan, and a shower of crushed Doritos! Fries and soda not included in the $10 offer. Mountain Dew is a special menu addition for Burger Week only!
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=80%20SE%20Madison%20St.%2C%20Suite%20100%2C%20Portland%2C%20OR" target="_blank" rel="noopener">80 SE Madison St., Suite 100</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- The Smoke Show -->
+      <article class="burger-card" data-tags="Vancouver" data-lat="45.624887" data-lng="-122.591124">
+        <a class="thumb-link" href="https://everout.com/portland/events/the-smoke-show/e249403/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDY2OTgyMTM2NTc5Mi1CbGVzcy1Zb3VyLUhlYXJ0X1ZhbmNvdXZlci5qcGciLCAiZWRpdHMiOiB7InJlc2l6ZSI6IHsiZml0IjogImluc2lkZSIsICJwb3NpdGlvbiI6ICJjZW50cmUiLCAid2lkdGgiOiA5NjAsICJoZWlnaHQiOiA2MDAsICJ3aXRob3V0RW5sYXJnZW1lbnQiOiBmYWxzZX0sICJyb3RhdGUiOiBudWxsfX0=" alt="The Smoke Show" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/the-smoke-show/e249403/" target="_blank" rel="noopener">
+                <h2 class="burger-name">The Smoke Show</h2>
+              </a>
+              <div class="restaurant-name">Bless Your Heart Burgers</div>
+              <span class="neighborhood-tag">Vancouver</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                Locally sourced ground beef, smoked pastrami jam, shredded lettuce, chipotle aioli, pickled peppers, and smoked cheddar cheese.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=7910%20E%20Mill%20Plain%20Blvd.%2C%20Suite%20120%2C%20Vancouver%2C%20WA" target="_blank" rel="noopener">7910 E Mill Plain Blvd., Suite 120</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+<!-- The Sweet Heat Burger -->
+      <article class="burger-card" data-tags="Milwaukie" data-lat="45.446794" data-lng="-122.629302">
+        <a class="thumb-link" href="https://everout.com/portland/events/the-sweet-heat-burger/e249104/" target="_blank" rel="noopener">
+          <img class="burger-thumb" src="https://d2sa0osf92td39.cloudfront.net/eyJidWNrZXQiOiAiZXZlcm91dC1pbWFnZXMtcHJvZHVjdGlvbiIsICJrZXkiOiAiaW1hZ2UtMTc4NDMyNzIzMTQ5ODA1Ni1PZmZpY2UtQmFyLmpwZyIsICJlZGl0cyI6IHsicmVzaXplIjogeyJmaXQiOiAiaW5zaWRlIiwgInBvc2l0aW9uIjogImNlbnRyZSIsICJ3aWR0aCI6IDk2MCwgImhlaWdodCI6IDYwMCwgIndpdGhvdXRFbmxhcmdlbWVudCI6IGZhbHNlfSwgInJvdGF0ZSI6IG51bGx9fQ==" alt="The Sweet Heat Burger" />
+        </a>
+        <div class="burger-content">
+          <div>
+            <div class="burger-header">
+              <a class="burger-name-link" href="https://everout.com/portland/events/the-sweet-heat-burger/e249104/" target="_blank" rel="noopener">
+                <h2 class="burger-name">The Sweet Heat Burger</h2>
+              </a>
+              <div class="restaurant-name">The Office Bar</div>
+              <span class="neighborhood-tag">Milwaukie</span>
+            </div>
+            <div class="burger-body">
+              <div class="ingredients-title">Ingredients</div>
+              <p class="ingredients-list">
+                House-made burger patty, fresh arugula, strawberry-jalapeño compote, and spreadable Brie on a brioche bun.
+              </p>
+            </div>
+          </div>
+          <div class="burger-footer">
+            <div class="address">
+              📍 <a class="address-link" href="https://www.google.com/maps/search/?api=1&query=10598%20SE%2032nd%20Ave.%2C%20Milwaukie%2C%20OR" target="_blank" rel="noopener">10598 SE 32nd Ave.</a>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+  </div>
+
+<script>
+  // Paste a browser-restricted key with Maps JavaScript API enabled.
+  const GOOGLE_MAPS_API_KEY = 'AIzaSyDOuFxwOHeuWtGlRGRfi0wKOzbge01hJVk';
+
+  let burgerMap = null;
+  let mapMarkers = [];
+  const MAX_FILTER_ZOOM = 13;
+  const FILTER_BOUNDS_PADDING = 54;
+
+  const MAP_PALETTE = {
+    violet: '#4004F6',
+    deep: '#5E4C7D',
+    mid: '#7B689A',
+    soft: '#8E7BA9',
+    light: '#A695B8',
+    bg: '#f4f1f8',
+  };
+
+  const atomicMapStyles = [
+    { elementType: 'geometry', stylers: [{ color: MAP_PALETTE.bg }] },
+    { elementType: 'labels.text.fill', stylers: [{ color: MAP_PALETTE.deep }] },
+    { elementType: 'labels.text.stroke', stylers: [{ color: MAP_PALETTE.bg }] },
+    {
+      featureType: 'administrative.locality',
+      elementType: 'labels.text.fill',
+      stylers: [{ color: MAP_PALETTE.mid }],
+    },
+    {
+      featureType: 'poi',
+      elementType: 'labels.text.fill',
+      stylers: [{ color: MAP_PALETTE.soft }],
+    },
+    {
+      featureType: 'poi.park',
+      elementType: 'geometry',
+      stylers: [{ color: '#ddd4e8' }],
+    },
+    {
+      featureType: 'poi.park',
+      elementType: 'labels.text.fill',
+      stylers: [{ color: MAP_PALETTE.mid }],
+    },
+    {
+      featureType: 'transit.station.airport',
+      elementType: 'labels.icon',
+      stylers: [
+        { hue: MAP_PALETTE.soft },
+        { saturation: -45 },
+        { lightness: 15 },
+      ],
+    },
+    {
+      featureType: 'transit.station.airport',
+      elementType: 'labels.text.fill',
+      stylers: [{ color: MAP_PALETTE.soft }],
+    },
+    {
+      featureType: 'transit.station.airport',
+      elementType: 'labels.text.stroke',
+      stylers: [{ color: MAP_PALETTE.bg }],
+    },
+    {
+      featureType: 'transit.station',
+      elementType: 'labels.icon',
+      stylers: [
+        { hue: MAP_PALETTE.light },
+        { saturation: -40 },
+        { lightness: 18 },
+      ],
+    },
+    {
+      featureType: 'road',
+      elementType: 'geometry',
+      stylers: [{ color: '#ffffff' }],
+    },
+    {
+      featureType: 'road',
+      elementType: 'geometry.stroke',
+      stylers: [{ color: MAP_PALETTE.light }],
+    },
+    {
+      featureType: 'road.highway',
+      elementType: 'geometry',
+      stylers: [{ color: '#ebe4f2' }],
+    },
+    {
+      featureType: 'road.highway',
+      elementType: 'geometry.stroke',
+      stylers: [{ color: MAP_PALETTE.soft }],
+    },
+    {
+      featureType: 'road.highway',
+      elementType: 'labels.icon',
+      stylers: [
+        { hue: MAP_PALETTE.mid },
+        { saturation: -50 },
+        { lightness: 20 },
+      ],
+    },
+    {
+      featureType: 'road.highway',
+      elementType: 'labels.text.fill',
+      stylers: [{ color: MAP_PALETTE.deep }],
+    },
+    {
+      featureType: 'road.highway.controlled_access',
+      elementType: 'labels.icon',
+      stylers: [
+        { hue: MAP_PALETTE.mid },
+        { saturation: -50 },
+        { lightness: 20 },
+      ],
+    },
+    {
+      featureType: 'road.highway.controlled_access',
+      elementType: 'labels.text.fill',
+      stylers: [{ color: MAP_PALETTE.deep }],
+    },
+    {
+      featureType: 'transit',
+      elementType: 'geometry',
+      stylers: [{ color: '#e8e0ef' }],
+    },
+    {
+      featureType: 'water',
+      elementType: 'geometry',
+      stylers: [{ color: '#b8a8cf' }],
+    },
+    {
+      featureType: 'water',
+      elementType: 'labels.text.fill',
+      stylers: [{ color: MAP_PALETTE.deep }],
+    },
+  ];
+
+  function createPinIcon(isFavorite) {
+    const fill = isFavorite ? MAP_PALETTE.violet : MAP_PALETTE.mid;
+    const inner = isFavorite ? '#ffffff' : MAP_PALETTE.light;
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="44" viewBox="0 0 36 44">
+        <path fill="${fill}" stroke="${MAP_PALETTE.deep}" stroke-width="1.25"
+          d="M18 1C9.16 1 2 8.16 2 17c0 12.2 16 25 16 25s16-12.8 16-25C34 8.16 26.84 1 18 1z"/>
+        <circle fill="${inner}" cx="18" cy="17" r="6.5"/>
+        ${isFavorite ? '<circle fill="' + MAP_PALETTE.violet + '" cx="18" cy="17" r="2.5"/>' : ''}
+      </svg>`;
+    return {
+      url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg.trim())}`,
+      scaledSize: new google.maps.Size(36, 44),
+      anchor: new google.maps.Point(18, 44),
+    };
+  }
+
+  function cardTags(card) {
+    return (card.dataset.tags || '')
+      .split(/\s+/)
+      .map(t => t.trim())
+      .filter(Boolean);
+  }
+
+  const FAVORITES_KEY = 'portlandBurgerWeekFavorites';
+  const DEFAULT_FAVORITE_IDS = ['e248860', 'e249092', 'e249007'];
+  let activeFilterTag = 'all';
+  let favoriteIds = new Set();
+
+  function loadFavoriteSet() {
+    if (localStorage.getItem(FAVORITES_KEY) === null) {
+      const initial = new Set(DEFAULT_FAVORITE_IDS);
+      saveFavoriteSet(initial);
+      return initial;
+    }
+    try {
+      const parsed = JSON.parse(localStorage.getItem(FAVORITES_KEY) || '[]');
+      return new Set(Array.isArray(parsed) ? parsed : []);
+    } catch {
+      return new Set();
+    }
+  }
+
+  function saveFavoriteSet(set) {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify([...set]));
+  }
+
+  function getBurgerId(card) {
+    const href = card.querySelector('.burger-name-link')?.getAttribute('href') || '';
+    const match = href.match(/\/(e\d+)\/?$/);
+    return match ? match[1] : href;
+  }
+
+  function isCardFavorite(card) {
+    const id = getBurgerId(card);
+    return id ? favoriteIds.has(id) : false;
+  }
+
+  function ensureFavoriteButton(card) {
+    const header = card.querySelector('.burger-header');
+    const nameLink = header?.querySelector('.burger-name-link');
+    if (!header || !nameLink || header.querySelector('.favorite-btn')) return;
+
+    let row = header.querySelector('.burger-title-row');
+    if (!row) {
+      row = document.createElement('div');
+      row.className = 'burger-title-row';
+      nameLink.replaceWith(row);
+      row.appendChild(nameLink);
+    }
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'favorite-btn';
+    btn.innerHTML = '<span aria-hidden="true">☆</span>';
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleCardFavorite(card);
+    });
+    row.appendChild(btn);
+  }
+
+  function updateFavoriteUI(card) {
+    const fav = isCardFavorite(card);
+    const btn = card.querySelector('.favorite-btn');
+    if (btn) {
+      btn.classList.toggle('is-favorite', fav);
+      btn.setAttribute('aria-pressed', fav ? 'true' : 'false');
+      btn.setAttribute('aria-label', fav ? 'Remove from favorites' : 'Add to favorites');
+      btn.querySelector('[aria-hidden="true"]').textContent = fav ? '★' : '☆';
+    }
+  }
+
+  function toggleCardFavorite(card) {
+    const id = getBurgerId(card);
+    if (!id) return;
+    if (favoriteIds.has(id)) {
+      favoriteIds.delete(id);
+    } else {
+      favoriteIds.add(id);
+    }
+    saveFavoriteSet(favoriteIds);
+    updateFavoriteUI(card);
+    filterMenu(activeFilterTag, null);
+  }
+
+  function initFavoriteControls() {
+    favoriteIds = loadFavoriteSet();
+    document.querySelectorAll('.burger-card').forEach(card => {
+      ensureFavoriteButton(card);
+      updateFavoriteUI(card);
+    });
+  }
+
+  function cardMatchesFilter(card, tag) {
+    if (tag === 'all') return true;
+    if (tag === 'star') return isCardFavorite(card);
+    return cardTags(card).includes(tag);
+  }
+
+  function filterMenu(tag, evt) {
+    activeFilterTag = tag;
+    const buttons = document.querySelectorAll('.filter-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    if (evt && evt.target) {
+      evt.target.classList.add('active');
+    } else {
+      const activeBtn = document.querySelector(`.filter-btn[data-filter="${tag}"]`);
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    const cards = document.querySelectorAll('.burger-card');
+    cards.forEach(card => {
+      if (cardMatchesFilter(card, tag)) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    syncMapMarkers();
+  }
+
+  function getLocationsFromCards() {
+    return [...document.querySelectorAll('.burger-card')].map(card => {
+      const lat = parseFloat(card.dataset.lat);
+      const lng = parseFloat(card.dataset.lng);
+      const title = card.querySelector('.burger-name')?.textContent?.trim() || 'Burger';
+      const place = card.querySelector('.restaurant-name')?.textContent?.trim() || '';
+      const url = card.querySelector('.burger-name-link')?.href || '';
+      const thumbEl = card.querySelector('.burger-thumb');
+      const thumbSrc = thumbEl?.src || '';
+      const thumbAlt = thumbEl?.alt || title;
+      return { card, lat, lng, title, place, url, thumbSrc, thumbAlt };
+    }).filter(loc => Number.isFinite(loc.lat) && Number.isFinite(loc.lng));
+  }
+
+  function clampFilterZoom() {
+    google.maps.event.addListenerOnce(burgerMap, 'idle', () => {
+      if (burgerMap.getZoom() > MAX_FILTER_ZOOM) {
+        burgerMap.setZoom(MAX_FILTER_ZOOM);
+      }
+    });
+  }
+
+  function syncMapMarkers() {
+    if (!burgerMap) return;
+
+    mapMarkers.forEach(m => m.setMap(null));
+    mapMarkers = [];
+
+    const bounds = new google.maps.LatLngBounds();
+    let visibleCount = 0;
+
+    getLocationsFromCards().forEach(loc => {
+      if (loc.card.classList.contains('hidden')) return;
+
+      const isFavorite = isCardFavorite(loc.card);
+      const marker = new google.maps.Marker({
+        position: { lat: loc.lat, lng: loc.lng },
+        map: burgerMap,
+        title: `${loc.title} — ${loc.place}`,
+        icon: createPinIcon(isFavorite),
+      });
+
+      const linkOpen = loc.url
+        ? `<a href="${loc.url}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block;">`
+        : '<div>';
+      const linkClose = loc.url ? '</a>' : '</div>';
+
+      const thumbBlock = loc.thumbSrc
+        ? `<img src="${loc.thumbSrc}" alt="${loc.thumbAlt.replace(/"/g, '&quot;')}" width="240" height="120" style="display:block;width:100%;max-width:240px;height:120px;object-fit:cover;border-radius:10px;margin:0 0 10px;background:${MAP_PALETTE.light};" />`
+        : '';
+
+      const infoHtml = `
+        <div style="max-width:260px;font-family:Outfit,system-ui,sans-serif;line-height:1.4;color:${MAP_PALETTE.deep};padding:2px 0;">
+          ${linkOpen}
+            ${thumbBlock}
+            <strong style="display:block;font-size:15px;color:${MAP_PALETTE.violet};margin-bottom:4px;">${loc.title}</strong>
+          ${linkClose}
+          <span style="display:block;font-size:13px;color:${MAP_PALETTE.mid};margin-bottom:6px;">${loc.place}</span>
+          ${loc.url ? `<a href="${loc.url}" target="_blank" rel="noopener" style="color:${MAP_PALETTE.violet};font-weight:600;font-size:13px;">EverOut listing</a>` : ''}
+        </div>`;
+
+      const info = new google.maps.InfoWindow({ content: infoHtml, maxWidth: 280 });
+      marker.addListener('click', () => {
+        mapMarkers.forEach(m => {
+          if (m.infoWindow) m.infoWindow.close();
+        });
+        info.open({ map: burgerMap, anchor: marker });
+        marker.infoWindow = info;
+      });
+
+      mapMarkers.push(marker);
+      bounds.extend(marker.getPosition());
+      visibleCount += 1;
+    });
+
+    if (visibleCount === 0) return;
+    if (visibleCount === 1) {
+      burgerMap.setCenter(bounds.getCenter());
+      burgerMap.setZoom(MAX_FILTER_ZOOM);
+    } else {
+      burgerMap.fitBounds(bounds, FILTER_BOUNDS_PADDING);
+      clampFilterZoom();
+    }
+  }
+
+  function initMap() {
+    const el = document.getElementById('burger-map');
+    if (!el || !window.google?.maps) return;
+
+    document.getElementById('map-api-hint').hidden = true;
+
+    burgerMap = new google.maps.Map(el, {
+      center: { lat: 45.52, lng: -122.65 },
+      zoom: 11,
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullscreenControl: true,
+      styles: atomicMapStyles,
+      backgroundColor: MAP_PALETTE.bg,
+    });
+
+    syncMapMarkers();
+  }
+
+  function loadGoogleMaps() {
+    const hint = document.getElementById('map-api-hint');
+    if (!GOOGLE_MAPS_API_KEY) {
+      hint.hidden = false;
+      return;
+    }
+
+    if (window.google?.maps) {
+      initMap();
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_MAPS_API_KEY)}&callback=initMap`;
+    script.async = true;
+    script.onerror = () => {
+      hint.hidden = false;
+      hint.textContent = 'Could not load Google Maps. Check your API key and that Maps JavaScript API is enabled.';
+    };
+    document.head.appendChild(script);
+  }
+
+  window.initMap = initMap;
+  initFavoriteControls();
+  loadGoogleMaps();
+</script>
+</body>
+</html>
